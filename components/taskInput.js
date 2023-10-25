@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, TextInput, StyleSheet, Button } from 'react-native';
 
-export default function TaskInput({ addTask, endAddTask, setTaskList }) {
+export default function TaskInput({ addTask }) {
   const [input, setInput] = useState('');
 
   function handleInput(text) {
