@@ -1,17 +1,82 @@
 import { StatusBar } from 'expo-status-bar';
-import { View, Text, TextInput, StyleSheet, Button } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  FlatList,
+  ImageBackground,
+} from 'react-native';
+import { useState } from 'react';
+import TaskInput from './components/taskInput';
+import TaskItem from './components/taskItem';
 
 export default function App() {
+  const [taskList, setTaskList] = useState([]);
+  const [modalIsVisible, setModalIsVisible] = useState(false);
+
+  function startAddTask() {
+    setModalIsVisible(true);
+  }
+
+  function endAddTask() {
+    setModalIsVisible(false);
+  }
+
+  function deleteTask(id) {
+    setTaskList((prev) => {
+      return prev.filter((one) => one.id !== id);
+    });
+  }
+
+  function addTask(enteredText) {
+    setTaskList((prev) => [
+      ...prev,
+      { text: enteredText, id: Math.random().toString() },
+    ]);
+    endAddTask();
+  }
+
   return (
-    <View style={styles.appContainer}>
-      <View style={styles.inputContainer}>
-        <TextInput style={styles.textInput} placeholder="Your Task" />
-        <Button title="Add" />
+    <ImageBackground
+      source={require('./assets/so-white.png')}
+      resizeMode="cover"
+      style={styles.image}
+    >
+      <View style={styles.appContainer}>
+        <TaskInput addTask={addTask} />
+        <View style={styles.tasksContainer}>
+          {/* using scroll view */}
+          {/* <ScrollView>
+          {taskList.length > 0 ? (
+            //wrap the text by view as in ios the border raduis not applied to text
+            taskList.map((task, index) => {
+              return (
+                <View style={styles.taskItem} key={index}>
+                  <Text style={styles.taskText}>{task}</Text>
+                </View>
+              );
+            })
+          ) : (
+            <Text>List of Tasks...</Text>
+          )}
+        </ScrollView> */}
+
+          {/* using flatList */}
+
+          <FlatList
+            data={taskList}
+            renderItem={({ item }) => (
+              <TaskItem
+                text={item.text}
+                deleteTask={() => deleteTask(item.id)}
+              />
+            )}
+            keyExtractor={(item) => item.id}
+            // extraData={selectedId}
+          />
+        </View>
       </View>
-      <View style={styles.goalsContainer}>
-        <Text>List of Tasks...</Text>
-      </View>
-    </View>
+    </ImageBackground>
   );
 }
 
@@ -21,23 +86,11 @@ const styles = StyleSheet.create({
     paddingTop: 50,
     paddingHorizontal: 16,
   },
-  inputContainer: {
+  image: {
     flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 24,
-    borderBottomWidth: 1,
-    borderBottomColor: '#cccccc',
+    justifyContent: 'center',
   },
-  textInput: {
-    borderWidth: 1,
-    borderColor: '#cccccc',
-    width: '70%',
-    marginRight: 8,
-    padding: 8,
-  },
-  goalsContainer: {
+  tasksContainer: {
     flex: 5,
   },
 });
