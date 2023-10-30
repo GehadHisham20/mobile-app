@@ -13,15 +13,15 @@ import TaskItem from '../components/taskItem';
 
 export default function MainScreen() {
   const [taskList, setTaskList] = useState([]);
-  const [modalIsVisible, setModalIsVisible] = useState(false);
+  //   const [modalIsVisible, setModalIsVisible] = useState(false);
 
-  function startAddTask() {
-    setModalIsVisible(true);
-  }
+  //   function startAddTask() {
+  //     setModalIsVisible(true);
+  //   }
 
-  function endAddTask() {
-    setModalIsVisible(false);
-  }
+  //   function endAddTask() {
+  //     setModalIsVisible(false);
+  //   }
 
   function deleteTask(id) {
     const newTasks = taskList.filter((one) => one.id !== id);
@@ -30,13 +30,14 @@ export default function MainScreen() {
   }
 
   function addTask(enteredText) {
-    const newTasks = [
-      ...taskList,
-      { text: enteredText, id: Math.random().toString() },
-    ];
-    setTaskList(newTasks);
-    storeDataInStorage(newTasks);
-    endAddTask();
+    if (enteredText.length > 0) {
+      const newTasks = [
+        ...taskList,
+        { text: enteredText, id: Math.random().toString() },
+      ];
+      setTaskList(newTasks);
+      storeDataInStorage(newTasks);
+    }
   }
 
   //store data in storage
